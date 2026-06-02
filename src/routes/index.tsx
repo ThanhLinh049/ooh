@@ -1,29 +1,51 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Header } from "@/components/site/Header";
+import { HeroSearch } from "@/components/site/HeroSearch";
+import { VIPJobsSection } from "@/components/site/VIPJobsSection";
+import { FeaturedCampaignsAndBrands } from "@/components/site/FeaturedCampaignsAndBrands";
+import { TopIndustriesGrid } from "@/components/site/TopIndustriesGrid";
+import { CandidateCTA } from "@/components/site/CandidateCTA";
+import { Footer } from "@/components/site/Footer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "VieclamOOH - Việc làm Quảng Cáo Ngoài Trời, OOH Media, LED Billboard" },
+      {
+        name: "description",
+        content:
+          "Sàn việc làm chuyên biệt ngành Quảng Cáo Ngoài Trời (OOH), LED Billboard, Production và Activation tại Việt Nam. Tìm việc VIP, ứng tuyển nhanh.",
+      },
+      { property: "og:title", content: "VieclamOOH - Việc làm Quảng Cáo Ngoài Trời" },
+      {
+        property: "og:description",
+        content: "Kết nối nhân sự chuyên biệt cho OOH Media, Production, LED Billboard và Activation tại Việt Nam.",
+      },
+    ],
+    links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
+      },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background font-sans">
+      <Header />
+      <main>
+        <HeroSearch />
+        <VIPJobsSection />
+        <FeaturedCampaignsAndBrands />
+        <TopIndustriesGrid />
+        <CandidateCTA />
+      </main>
+      <Footer />
     </div>
   );
 }
