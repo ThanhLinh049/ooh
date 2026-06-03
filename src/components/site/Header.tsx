@@ -10,6 +10,7 @@ const nav = [
   { label: "Việc làm", href: "#vip-jobs" },
   { label: "Công ty", href: "#campaigns" },
   { label: "Ngành nghề", href: "#industries" },
+  { label: "Tin tức", href: "#news" },
 ];
 
 export function Header({ variant = "solid" }: HeaderProps) {
