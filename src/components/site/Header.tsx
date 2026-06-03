@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X, BriefcaseBusiness } from "lucide-react";
-import LogoWhite from "@/assets/Logo-vieclamooh-white.png";
-import LogoDark from "@/assets/Logo-vieclamooh.png";
+import LogoWhite from "@/assets/Logo-vieclamooh.png";
+import LogoDark from "@/assets/logo-vieclamooh.png";
 
 type HeaderProps = {
   variant?: "transparent" | "solid";
