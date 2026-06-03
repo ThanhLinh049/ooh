@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Crown } from "lucide-react";
 import { vipJobs } from "@/lib/mockData";
 import { VipJobCard } from "./VipJobCard";
@@ -8,7 +8,6 @@ const tabs = [
   { id: "top", label: "Top VIP" },
   { id: "urgent", label: "Tuyển gấp" },
   { id: "high_salary", label: "Lương cao" },
-  { id: "expiring", label: "Sắp hết hạn" },
 ] as const;
 
 const PAGE_SIZE = 12;
@@ -16,134 +15,176 @@ const PAGE_SIZE = 12;
 export function VIPJobsSection() {
   const [tab, setTab] = useState<(typeof tabs)[number]["id"]>("all");
   const [page, setPage] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
 
-  const filtered = useMemo(() => {
+  const filteredJobs = useMemo(() => {
     const list = [...vipJobs];
+
     switch (tab) {
       case "top":
-        return list.filter((j) => j.packageType === "top_vip");
+        return list
+          .filter((job) => job.packageType === "top_vip")
+          .sort((a, b) => b.priorityLevel - a.priorityLevel);
+
       case "urgent":
-        return list.filter((j) => j.isUrgent);
+        return list
+          .filter((job) => job.isUrgent)
+          .sort((a, b) => a.daysLeft - b.daysLeft);
+
       case "high_salary":
-        return list.filter((j) => j.isHighSalary);
-      case "expiring":
-        return [...list].sort((a, b) => a.daysLeft - b.daysLeft);
+        return list
+          .filter((job) => job.isHighSalary)
+          .sort((a, b) => b.priorityLevel - a.priorityLevel);
+
       default:
-        return list.sort((a, b) => b.priorityLevel - a.priorityLevel);
+        return list.sort((a, b) => {
+          if (b.priorityLevel !== a.priorityLevel) {
+            return b.priorityLevel - a.priorityLevel;
+          }
+
+          return a.daysLeft - b.daysLeft;
+        });
     }
   }, [tab]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const current = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
+
+  const currentJobs = filteredJobs.slice(
+    page * PAGE_SIZE,
+    page * PAGE_SIZE + PAGE_SIZE
+  );
 
   useEffect(() => {
     setPage(0);
   }, [tab]);
 
   useEffect(() => {
-    if (paused || totalPages <= 1) return;
-    const id = setInterval(() => setPage((p) => (p + 1) % totalPages), 7000);
-    return () => clearInterval(id);
-  }, [paused, totalPages]);
+    if (page > totalPages - 1) {
+      setPage(0);
+    }
+  }, [page, totalPages]);
+
+  const canShowPagination = totalPages > 1;
 
   return (
-    <section id="vip-jobs" className="bg-muted/40 py-16 sm:py-20">
+    <section id="vip-jobs" className="bg-muted/40 py-12 sm:py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary">
-              <Crown size={12} /> Premium
+              <Crown size={12} />
+              Việc làm nổi bật
             </div>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Việc Làm VIP - Nổi Bật
+
+            <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+              Việc làm VIP - Nổi bật
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-              Các vị trí được ưu tiên hiển thị, thời gian có hạn.
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Các vị trí được ưu tiên hiển thị từ doanh nghiệp trong ngành OOH,
+              truyền thông và thi công.
             </p>
           </div>
-          <a href="#" className="hidden text-sm font-bold text-primary hover:underline sm:inline">
-            Xem Tất Cả Việc VIP →
+
+          <a
+            href="#"
+            className="hidden text-sm font-bold text-primary hover:underline sm:inline"
+          >
+            Xem tất cả việc VIP →
           </a>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2" role="tablist">
-          {tabs.map((t) => (
-            <button
-              key={t.id}
-              role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => setTab(t.id)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-                tab === t.id
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "bg-white text-foreground/70 hover:bg-muted border border-border"
-              }`}
-            >
-              {t.label}
-            </button>
+        <div className="mt-5 flex flex-wrap gap-2" role="tablist">
+          {tabs.map((item) => {
+            const active = tab === item.id;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTab(item.id)}
+                className={`rounded-full border px-3.5 py-1.5 text-sm font-bold transition-all ${
+                  active
+                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                    : "border-border bg-white text-foreground/70 hover:border-primary/40 hover:text-primary"
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {currentJobs.map((job) => (
+            <VipJobCard key={job.id} job={job} />
           ))}
         </div>
 
-        <div
-          ref={ref}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocusCapture={() => setPaused(true)}
-          className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-        >
-          {current.map((j) => (
-            <VipJobCard key={j.id} job={j} />
-          ))}
-        </div>
+        {currentJobs.length === 0 && (
+          <div className="mt-6 rounded-2xl border border-dashed border-border bg-white px-5 py-10 text-center">
+            <p className="text-sm font-bold text-foreground">
+              Chưa có việc làm phù hợp.
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Hãy thử chọn bộ lọc khác.
+            </p>
+          </div>
+        )}
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-3">
+        {canShowPagination && (
+          <div className="mt-7 flex items-center justify-center gap-3">
             <button
+              type="button"
               aria-label="Trang trước"
-              onClick={() => {
-                setPaused(true);
-                setPage((p) => (p - 1 + totalPages) % totalPages);
-              }}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-white text-foreground hover:bg-muted"
+              onClick={() =>
+                setPage((currentPage) =>
+                  currentPage === 0 ? totalPages - 1 : currentPage - 1
+                )
+              }
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white text-foreground transition hover:bg-muted"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={17} />
             </button>
+
             <div className="flex items-center gap-1.5">
-              {Array.from({ length: totalPages }).map((_, i) => (
+              {Array.from({ length: totalPages }).map((_, index) => (
                 <button
-                  key={i}
-                  aria-label={`Trang ${i + 1}`}
-                  onClick={() => {
-                    setPaused(true);
-                    setPage(i);
-                  }}
+                  key={index}
+                  type="button"
+                  aria-label={`Trang ${index + 1}`}
+                  onClick={() => setPage(index)}
                   className={`h-2.5 rounded-full transition-all ${
-                    i === page ? "w-8 bg-primary" : "w-2.5 bg-border hover:bg-muted-foreground/50"
+                    index === page
+                      ? "w-7 bg-primary"
+                      : "w-2.5 bg-border hover:bg-muted-foreground/50"
                   }`}
                 />
               ))}
             </div>
+
             <button
+              type="button"
               aria-label="Trang sau"
-              onClick={() => {
-                setPaused(true);
-                setPage((p) => (p + 1) % totalPages);
-              }}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-white text-foreground hover:bg-muted"
+              onClick={() =>
+                setPage((currentPage) =>
+                  currentPage === totalPages - 1 ? 0 : currentPage + 1
+                )
+              }
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white text-foreground transition hover:bg-muted"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={17} />
             </button>
           </div>
         )}
 
-        <div className="mt-8 text-center sm:hidden">
+        <div className="mt-7 text-center sm:hidden">
           <a
             href="#"
-            className="inline-flex items-center justify-center rounded-xl border border-primary bg-white px-6 py-3 text-sm font-bold text-primary"
+            className="inline-flex items-center justify-center rounded-xl border border-primary bg-white px-5 py-2.5 text-sm font-bold text-primary"
           >
-            Xem Tất Cả Việc VIP
+            Xem tất cả việc VIP
           </a>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin } from "lucide-react";
+import Logo from "@/assets/Logo-Vieclamooh-white.png";
 
 const cols = [
   {
@@ -22,12 +23,13 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary font-black text-primary-foreground">
-                V
-              </span>
-              <span className="text-lg font-extrabold tracking-tight text-white">
-                Vieclam<span className="text-primary">OOH</span>
-              </span>
+              <a href="/" className="inline-flex items-center">
+                <img
+                  src={Logo}
+                  alt="VieclamOOH Logo"
+                  className="h-12 w-auto max-w-[160px] object-contain"
+                />
+              </a>
             </div>
             <p className="mt-4 max-w-md text-sm leading-relaxed">
               Sàn việc làm chuyên biệt cho ngành Quảng Cáo Ngoài Trời, OOH Media, LED Billboard, Production và Activation tại Việt Nam.

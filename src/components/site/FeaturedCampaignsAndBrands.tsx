@@ -2,11 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   Briefcase,
-  Building2,
   ChevronLeft,
   ChevronRight,
   MapPin,
-  Plus,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -24,6 +22,8 @@ type Employer = {
   companyName: string;
   shortName: string;
   initial: string;
+  logo: string;
+  href: string;
   industry: string;
   location: string;
   activeJobs: number;
@@ -41,12 +41,17 @@ const tabs: { label: string; value: EmployerCategory }[] = [
   { label: "Activation", value: "activation" },
 ];
 
+const SJK_LOGO =
+  "https://sjkgroup.vn/wp-content/uploads/2023/04/logo-sjk-group.svg";
+
 const employers: Employer[] = [
   {
     id: 1,
-    companyName: "Goldsun Media",
-    shortName: "Goldsun",
-    initial: "G",
+    companyName: "SJK Group",
+    shortName: "SJK",
+    initial: "S",
+    logo: SJK_LOGO,
+    href: "/companies/sjk-group",
     industry: "OOH Media",
     location: "Hà Nội / TP.HCM",
     activeJobs: 14,
@@ -56,9 +61,25 @@ const employers: Employer[] = [
   },
   {
     id: 2,
+    companyName: "Goldsun Media",
+    shortName: "Goldsun",
+    initial: "G",
+    logo: SJK_LOGO,
+    href: "/companies/goldsun-media",
+    industry: "OOH Media",
+    location: "Hà Nội / TP.HCM",
+    activeJobs: 12,
+    category: "ooh-media",
+    isVerified: true,
+    isPremium: true,
+  },
+  {
+    id: 3,
     companyName: "Shojiki Ads Corp",
     shortName: "Shojiki",
     initial: "S",
+    logo: SJK_LOGO,
+    href: "/companies/shojiki-ads",
     industry: "OOH Network",
     location: "TP.HCM",
     activeJobs: 8,
@@ -66,10 +87,12 @@ const employers: Employer[] = [
     isVerified: true,
   },
   {
-    id: 3,
+    id: 4,
     companyName: "DatVietVAC",
     shortName: "DatVietVAC",
     initial: "D",
+    logo: SJK_LOGO,
+    href: "/companies/datvietvac",
     industry: "Media Agency",
     location: "TP.HCM",
     activeJobs: 22,
@@ -77,10 +100,12 @@ const employers: Employer[] = [
     isVerified: true,
   },
   {
-    id: 4,
+    id: 5,
     companyName: "LED Billboard Vietnam",
     shortName: "LED Billboard",
     initial: "L",
+    logo: SJK_LOGO,
+    href: "/companies/led-billboard-vietnam",
     industry: "LED Display",
     location: "Toàn quốc",
     activeJobs: 11,
@@ -88,20 +113,24 @@ const employers: Employer[] = [
     isVerified: true,
   },
   {
-    id: 5,
+    id: 6,
     companyName: "Pano Group",
     shortName: "Pano Group",
     initial: "P",
+    logo: SJK_LOGO,
+    href: "/companies/pano-group",
     industry: "Thi công Pano",
     location: "Hà Nội",
     activeJobs: 6,
     category: "production",
   },
   {
-    id: 6,
+    id: 7,
     companyName: "Outdoor Media Network",
     shortName: "Outdoor",
     initial: "O",
+    logo: SJK_LOGO,
+    href: "/companies/outdoor-media-network",
     industry: "OOH Network",
     location: "TP.HCM",
     activeJobs: 10,
@@ -109,40 +138,48 @@ const employers: Employer[] = [
     isVerified: true,
   },
   {
-    id: 7,
+    id: 8,
     companyName: "Activation Pro",
     shortName: "Activation",
     initial: "A",
+    logo: SJK_LOGO,
+    href: "/companies/activation-pro",
     industry: "Activation",
     location: "Toàn quốc",
     activeJobs: 9,
     category: "activation",
   },
   {
-    id: 8,
+    id: 9,
     companyName: "Media Planning Hub",
     shortName: "Media Hub",
     initial: "M",
+    logo: SJK_LOGO,
+    href: "/companies/media-planning-hub",
     industry: "Media Planning",
     location: "Hà Nội",
     activeJobs: 7,
     category: "agency",
   },
   {
-    id: 9,
+    id: 10,
     companyName: "Lightbox Outdoor",
     shortName: "Lightbox",
     initial: "L",
+    logo: SJK_LOGO,
+    href: "/companies/lightbox-outdoor",
     industry: "Billboard",
     location: "Đà Nẵng",
     activeJobs: 5,
     category: "led-pano",
   },
   {
-    id: 10,
+    id: 11,
     companyName: "Brand Activation House",
     shortName: "BA House",
     initial: "B",
+    logo: SJK_LOGO,
+    href: "/companies/brand-activation-house",
     industry: "Activation",
     location: "TP.HCM",
     activeJobs: 12,
@@ -150,20 +187,24 @@ const employers: Employer[] = [
     isVerified: true,
   },
   {
-    id: 11,
+    id: 12,
     companyName: "OOH Production Studio",
     shortName: "Production",
     initial: "O",
+    logo: SJK_LOGO,
+    href: "/companies/ooh-production-studio",
     industry: "Production",
     location: "Hà Nội",
     activeJobs: 4,
     category: "production",
   },
   {
-    id: 12,
+    id: 13,
     companyName: "Skyline Media",
     shortName: "Skyline",
     initial: "S",
+    logo: SJK_LOGO,
+    href: "/companies/skyline-media",
     industry: "OOH Media",
     location: "Toàn quốc",
     activeJobs: 15,
@@ -254,7 +295,7 @@ export function FeaturedCampaignsAndBrands() {
                 </div>
 
                 <a
-                  href="#"
+                  href="/companies/sjk-group"
                   className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-primary hover:text-primary-foreground"
                 >
                   Xem tất cả công ty
@@ -350,7 +391,7 @@ export function FeaturedCampaignsAndBrands() {
 function EmployerSpotlightCard({ employer }: { employer: Employer }) {
   return (
     <a
-      href="#"
+      href={employer.href}
       className="group relative min-h-[390px] overflow-hidden rounded-[1.5rem] bg-slate-950 p-6 text-white shadow-xl transition hover:-translate-y-1 hover:shadow-2xl lg:col-span-4"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_10%,rgba(249,115,22,0.32),transparent_32%),linear-gradient(135deg,rgba(15,23,42,1),rgba(2,6,23,0.98))]" />
@@ -366,8 +407,19 @@ function EmployerSpotlightCard({ employer }: { employer: Employer }) {
           Đang tuyển mạnh
         </div>
 
-        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white text-4xl font-black text-primary shadow-2xl">
-          {employer.initial}
+        <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl bg-white p-3 shadow-2xl">
+          {employer.logo ? (
+            <img
+              src={employer.logo}
+              alt={`${employer.companyName} logo`}
+              className="h-full w-full object-contain"
+              loading="lazy"
+            />
+          ) : (
+            <span className="text-4xl font-black text-primary">
+              {employer.initial}
+            </span>
+          )}
         </div>
 
         <h3 className="mt-6 max-w-xs text-2xl font-black leading-tight">
@@ -389,7 +441,7 @@ function EmployerSpotlightCard({ employer }: { employer: Employer }) {
           </span>
 
           <span className="rounded-full bg-primary px-4 py-2 text-xs font-black text-primary-foreground">
-            Theo dõi
+            Xem công ty
           </span>
         </div>
       </div>
@@ -400,11 +452,22 @@ function EmployerSpotlightCard({ employer }: { employer: Employer }) {
 function EmployerMiniCard({ employer }: { employer: Employer }) {
   return (
     <a
-      href="#"
+      href={employer.href}
       className="group flex min-h-[126px] items-center gap-4 rounded-[1.25rem] border border-border bg-white p-4 transition hover:-translate-y-1 hover:border-primary/35 hover:shadow-lg"
     >
-      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-border bg-slate-50 text-xl font-black text-primary transition group-hover:border-primary/30 group-hover:bg-primary group-hover:text-primary-foreground">
-        {employer.initial}
+      <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-white p-2 transition group-hover:border-primary/30">
+        {employer.logo ? (
+          <img
+            src={employer.logo}
+            alt={`${employer.companyName} logo`}
+            className="h-full w-full object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <span className="text-xl font-black text-primary">
+            {employer.initial}
+          </span>
+        )}
       </div>
 
       <div className="min-w-0 flex-1">

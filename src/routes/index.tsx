@@ -6,6 +6,7 @@ import { FeaturedCampaignsAndBrands } from "@/components/site/FeaturedCampaignsA
 import { TopIndustriesGrid } from "@/components/site/TopIndustriesGrid";
 import { CandidateCTA } from "@/components/site/CandidateCTA";
 import { Footer } from "@/components/site/Footer";
+import { LatestJobsSection } from "../components/site/LatestJobsSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -41,6 +42,7 @@ function Index() {
       <main>
         <HeroSearch />
         <VIPJobsSection />
+        <LatestJobsSection />
         <FeaturedCampaignsAndBrands />
         <TopIndustriesGrid />
         <CandidateCTA />
