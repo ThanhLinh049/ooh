@@ -1,5 +1,5 @@
 import { Mail, Phone, MapPin } from "lucide-react";
-import Logo from "@/assets/logo-vieclamooh-white.png";
+import Logo from "@/assets/Logo-Vieclamooh-white.png";
 
 const cols = [
   {
