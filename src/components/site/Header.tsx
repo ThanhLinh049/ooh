@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Menu, X, BriefcaseBusiness } from "lucide-react";
-import LogoWhite from "@/assets/Logo-vieclamooh.png";
 import LogoDark from "@/assets/logo-vieclamooh.png";
 
 type HeaderProps = {
@@ -34,7 +33,7 @@ export function Header({ variant = "solid" }: HeaderProps) {
   }, [isTransparentVariant]);
 
   const solid = !isTransparentVariant || scrolled || open;
-  const logo = solid ? LogoDark : LogoWhite;
+  const logo = LogoDark;
 
   return (
     <header
